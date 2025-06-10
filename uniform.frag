@@ -20,6 +20,10 @@ float gaussian2D(vec2 pos, float sigma) {
     return exp(-(dist * dist) / (2.0 * sigma * sigma));
 }
 
+float psuedoRandom(vec2 pos) {
+    return fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 // This function is just all about color :)
 vec4 color_fun(in vec2 uv, float t){
     float strength = 0.02;
@@ -27,7 +31,7 @@ vec4 color_fun(in vec2 uv, float t){
     vec2 pos = uv*2.0-1.0;
     
     // gaussian center point
-    vec2 center1 = vec2(sin(t * 0.1) * 0.5, cos(t * 0.15) * 0.5);
+    vec2 center1 = vec2(sin(t * 0.1 + sin(t) * 0.1) * 0.5, sin(t * 0.15 - sin(t * 2.0) * 0.5) * 0.5); // modulate animation a bit...
     vec2 center2 = vec2(cos(t * 0.08) * 0.3, sin(t * 0.12) * 0.3);
     
     // center-dist
@@ -40,7 +44,7 @@ vec4 color_fun(in vec2 uv, float t){
     
     for(int i = 1; i < 6; i++){ 
         //noise fun
-        float noise = fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
+        float noise = psuedoRandom(pos);
         
         pos.x += strength * sin(2.0*slowTime+float(i)*100.0 * pos.y*noise) + slowTime * 0.00001;
         pos.y += strength * cos(float(i)*50.0 * pos.x);
@@ -73,7 +77,10 @@ void main()
         pos.y += cos(pos.y*0.04 + ii*0.01) * 10.0 * gaussTimeMain * (0.2 + loopGauss * 0.8);
     }
     
+    vec2 sampleOffset = mod(vec2(psuedoRandom(uv), psuedoRandom(uv.yx)), vec2(distance(uv, vec2(0.5)) * 0.05)); // random dithering
+    sampleOffset.x += sin(uv.y * 15.0 + time) * 0.02; // to distort whole image with wave
     // final color
-    vec4 wr = color_fun(uv, time);
+    vec4 wr = color_fun(uv + sampleOffset, time);
+    wr = vec4(pow(wr.rgb, vec3(0.2)), 1.0); // make image super bright
     gl_FragColor = vec4(wr);
 }
