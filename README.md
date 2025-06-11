@@ -21,6 +21,7 @@ Inspired by "Dear Data" and our previous work at dialog() Asia Generative Art Ex
 - `uniform.frag` - Fragment shader (the main artwork)
 - `uniform.vert` - Vertex shader
 - `dialogue.md` - Our written conversation (feel free to write anything here!)
+- `record` - Folder for any files!
 
 ---
 

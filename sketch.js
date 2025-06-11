@@ -16,6 +16,7 @@ function setup() {
   uniformsShader = loadShader("uniform.vert", "uniform.frag");
 
 
+
   aspectRatio = 1.0;
 
   let highRes = canvasSize * 2; // 2x resolution
@@ -23,14 +24,6 @@ function setup() {
   smallFBO = createFramebuffer({
     width: highRes,
     height: highRes,
-    format: UNSIGNED_BYTE,
-    density: 1,
-  });
-
-  // output
-  largeFBO = createFramebuffer({
-    width: 2500,
-    height: 2500,
     format: UNSIGNED_BYTE,
     density: 1,
   });
@@ -95,13 +88,27 @@ function windowResized() {
 //------------------------------------
 // download pic (high res)
 
-// function keyPressed() {
-//   if (key === 's' || key === 'S') {
-//     renderToFBO(largeFBO);
+function keyPressed() {
+  if (key === 's' || key === 'S') {
+    let currentWidth = width;
+    let currentHeight = height;
     
-//     largeFBO.save('shader_art_2500x2500', 'png');
-//   }
-// }
+    resizeCanvas(4000, 4000);
+    
+    // re render
+    renderToFBO(smallFBO);
+    background(0);
+    image(smallFBO, 0, 0, 4000, 4000);
+    
+    // save
+    saveCanvas('output', 'png');
+    
+    // ori size
+    resizeCanvas(currentWidth, currentHeight);
+    
+    console.log("高解析度圖片已儲存！");
+  }
+}
 
 // monitor fps
 
