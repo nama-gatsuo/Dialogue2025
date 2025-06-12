@@ -37,3 +37,12 @@ I need to think about what to work on tomorrow...
 Yesterday I got my Fuji film photos 🎞 from last year, and I'm really happy with how they turned out...
 I guess I really love highly saturated images.
 
+## 2025.06.12 - [aym]
+
+Thank you for organizing utilities!
+Just having fun
+I noticed that the stripes got stronger over time, so I changed time to oscillate cause I also really love initial state of gradation :)
+Now the pitch of stripe goes back and forth along time.
+And added some color modulation to keep complexity in color gradation.
+Also added another uv offset like mosaic-patterns.
+Let's see if all of them work together...

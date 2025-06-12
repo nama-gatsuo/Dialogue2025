@@ -124,16 +124,15 @@ void main()
         
         // final color
         // I usually mess with this function a lot to see what's the surprise...
-        // I noticed that the stripes got stronger over time, so I changed time to oscillate cause I really love initial state of gradation :)
-        float osc = sin(time * 0.05) * 0.1 +  sin(0.01 * time + cos(time * 0.1) * PI) * 0.2;
-        vec4 wr = color_fun(uv + sampleOffset, osc*10.0*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
+        float osc = sin(time * 0.02) * 0.5 + sin(0.006 * time + cos(time * 0.1) * PI) * 1.0;
+        vec4 wr = color_fun(uv + sampleOffset, osc*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
 
         // wr = vec4(pow(wr.rgb, vec3(0.2)), 1.0); // make image super bright
         vec3 bright = pow(wr.rgb, vec3(0.7, 0.3, 0.4));
         vec3 original = wr.rgb;
         wr = vec4(mix(original, bright, 0.9), 1.0);  // 90% bright 10% original
         
-        vec3 modCol = sin(wr.rgb * PI * 10.0) * 0.5 + 0.5;
+        vec3 modCol = sin(wr.rgb * PI * 20.0) * 0.5 + 0.5;
         wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
 
         gl_FragColor = wr;
