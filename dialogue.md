@@ -46,3 +46,19 @@ Now the pitch of stripe goes back and forth along time.
 And added some color modulation to keep complexity in color gradation.
 Also added another uv offset like mosaic-patterns.
 Let's see if all of them work together...
+
+## 2025.06.12 - [cyc]
+
+I'm late!
+
+I absolutely love the mosaic pattern!
+If you take a closer look at the edges in this version, there's this subtle beauty around the perimeter that feels really nice ✨✨
+It alo makes the color changes in the center much clearer to see
+Amazing!!
+
+I didn’t actually change any color palette today - I'm trying to simulate Caustics to make the ripples on screen more delicate...
+Though I haven't finished the area change calculations yet, I should be able to complete it tomorrow
+I think we can working on color adjustments next - all the colors 🌈 are currently competing for attention, maybe it's a bit (too) chaotic?
+Temporarily comment out the sampleOffset in main() - it was too intense, wanna creating more organic ripples now... 🌊
+
+Caustics reference: https://github.com/shanecelis/water-demo/blob/master/Shaders/Caustics.shader
