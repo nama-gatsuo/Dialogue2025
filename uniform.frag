@@ -107,7 +107,6 @@ void main()
     // slow down the time
     float gaussTimeMain = time * 0.05; 
     
-
     for (int i = 0; i < 10; i++){
         float ii = float(i);
         float loopGauss = gaussian(sin(gaussTimeMain * 0.1 + ii * 0.1), 0.4);
@@ -117,20 +116,27 @@ void main()
 
         float dist = distance(pos+ii, uv);
 
-        vec2 sampleOffset = mod(vec2(psuedoRandom(uv), psuedoRandom(uv.yx)), vec2(distance(uv, vec2(0.5)) * 0.05)); // random dithering
-        sampleOffset.x += sin(uv.y * 15.0 + time) * 0.02; // to distort whole image with wave
-
+        vec2 sampleOffset = mod(
+            vec2(psuedoRandom(ceil(uv*100.0)), psuedoRandom(ceil(uv*100.0))),
+            vec2(0.001 + smoothstep(0.2, 0.5, distance(uv, vec2(0.5))) * 0.05)
+        ); // random dithering
+        sampleOffset.x += sin(uv.y * 15.0 + time) * 0.1; // to distort whole image with wave
+        
         // final color
         // I usually mess with this function a lot to see what's the surprise...
-        vec4 wr = color_fun(uv,time*0.9*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
-        
-        // wr = vec4(pow(wr.rgb, vec3(0.2)), 1.0); // make image super bright
+        // I noticed that the stripes got stronger over time, so I changed time to oscillate cause I really love initial state of gradation :)
+        float osc = sin(time * 0.05) * 0.1 +  sin(0.01 * time + cos(time * 0.1) * PI) * 0.2;
+        vec4 wr = color_fun(uv + sampleOffset, osc*10.0*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
 
+        // wr = vec4(pow(wr.rgb, vec3(0.2)), 1.0); // make image super bright
         vec3 bright = pow(wr.rgb, vec3(0.7, 0.3, 0.4));
         vec3 original = wr.rgb;
         wr = vec4(mix(original, bright, 0.9), 1.0);  // 90% bright 10% original
-    
-        gl_FragColor = vec4(wr);
-}
-    
+        
+        vec3 modCol = sin(wr.rgb * PI * 10.0) * 0.5 + 0.5;
+        wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
+
+        gl_FragColor = wr;
+        
     }
+}
