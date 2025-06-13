@@ -218,13 +218,17 @@ void main()
         vec3 modCol = sin(wr.rgb * PI * 20.0) * 0.5 + 0.5;
         wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
 
-        // // added color warping
-        // vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(time)+sin(time)+0.2, 1.0);
-        // vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0, abs(time)+sin(time * 0.5), 1.0);
+        // vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(sin(time * 0.2)), 1.0);
+        // vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0,abs(time)+sin(time * 0.1), 1.0);
+        // wr.rgb = mix(col0, col1, vec3(sin(time+atan(PI*0.005)), sin(time), sin(time+0.1)) * 0.3 + vec3(0.1));
 
-        vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(sin(time * 0.2)), 1.0);
-        vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0,abs(time)+sin(time * 0.1), 1.0);
-        wr.rgb = mix(col0, col1, vec3(sin(time+atan(PI*0.005)), sin(time), sin(time+0.1)) * 0.3 + vec3(0.1));
+
+        float sat1 = 0.5 + abs(sin(time * 0.2)) * 1.1;
+        float sat2 = 0.4 + abs(sin(time * 0.1)) * 2.2;
+
+        vec3 col0 = ContrastSaturationBrightness(wr.grb, 1.0, sat1, 1.0);
+        vec3 col1 = ContrastSaturationBrightness(wr.rbg, 1.0, sat2, 1.0);
+        wr.rgb = mix(col0, col1, sin(time * 0.6) * 0.3 + 0.5);
 
         gl_FragColor = wr;
         
