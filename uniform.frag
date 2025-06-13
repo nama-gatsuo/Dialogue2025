@@ -35,7 +35,7 @@ vec3 ContrastSaturationBrightness(vec3 color, float brt, float sat, float con) {
     const vec3 LumCoeff = vec3(0.2125, 0.7154, 0.0721);
     
     vec3 AvgLumin  = vec3(AvgLumR, AvgLumG, AvgLumB);
-    vec3 brtColor  = clamp(color,vec3(0),vec3(1)) * brt;
+    vec3 brtColor  = clamp(color,vec3(0),vec3(1)) * brt*1.01;
     vec3 intensity = vec3(dot(brtColor, LumCoeff));
     vec3 satColor  = mix(intensity, brtColor, sat);
     vec3 conColor  = mix(AvgLumin, satColor, con);
@@ -188,11 +188,21 @@ void main()
 
         float dist = distance(pos+ii, uv);
 
-        vec2 sampleOffset = mod(
-            vec2(psuedoRandom(ceil(uv*100.0)), psuedoRandom(ceil(uv*100.0))),
-            vec2(0.001 + smoothstep(0.2, 0.5, distance(uv, vec2(0.5))) * 0.05)
-        ); // random dithering
+        // vec2 sampleOffset = mod(
+        //     vec2(psuedoRandom(ceil(uv*100.0)), psuedoRandom(ceil(uv*100.0))),
+        //     vec2(0.001 + smoothstep(0.2, 0.5, distance(uv, vec2(0.5))) * 0.05)
+        // ); // random dithering
 
+        vec2 organicNoise = vec2(
+            sin(uv.x * 20.0 + uv.y * 15.0 + time * 0.2) * 2.0,
+            cos(uv.y * 18.0 + uv.x * 12.0 + time * 0.15) * 2.5
+        );
+        
+        vec2 sampleOffset = vec2(
+            psuedoRandom(floor(uv * 100.0 + organicNoise)), 
+            psuedoRandom(floor(uv * 60.0 + organicNoise * 1.3))
+        ) * (0.001 + smoothstep(0.05, 0.6, distance(uv, vec2(0.5))) * 0.02);
+        
         // sampleOffset.x += sin(uv.y * ii) * 0.1; // to distort whole image with wave
         
         // final color
@@ -208,10 +218,13 @@ void main()
         vec3 modCol = sin(wr.rgb * PI * 20.0) * 0.5 + 0.5;
         wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
 
-        // added color warping
-        vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, sin(time * 0.5), 1.0);
-        vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0, sin(time * 0.5), 1.0);
-        wr.rgb = mix(col0, col1, vec3(sin(time+PI), sin(time), sin(time+0.4)) * 0.5 + vec3(0.5));
+        // // added color warping
+        // vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(time)+sin(time)+0.2, 1.0);
+        // vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0, abs(time)+sin(time * 0.5), 1.0);
+
+        vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(sin(time * 0.2)), 1.0);
+        vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0,abs(time)+sin(time * 0.1), 1.0);
+        wr.rgb = mix(col0, col1, vec3(sin(time+atan(PI*0.005)), sin(time), sin(time+0.1)) * 0.3 + vec3(0.1));
 
         gl_FragColor = wr;
         
