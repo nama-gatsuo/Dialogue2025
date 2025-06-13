@@ -3,10 +3,20 @@
 let uniformsShader;
 let smallFBO, largeFBO;
 let aspectRatio;
+let randonclrpos = [];
 
 function setup() {
   pixelDensity(1);
+
+  // random color(combo1&combo2) every time
+  //33% r 33% g 33% b
+  for (let i = 0; i < 6; i++) {
+    randonclrpos.push(Math.floor(Math.random() * 3));
+  }
   
+  resultString = randonclrpos.map(x => ['r','g','b'][x]).join('');
+  console.log(randonclrpos);
+
   // square canvas (90vh)
   let canvasSize = min(windowWidth * 0.9, windowHeight * 0.9);
   canvasSize = max(400, min(canvasSize, 800)); // min 400px，max 800px
@@ -54,6 +64,7 @@ function renderToFBO(fbo) {
   uniformsShader.setUniform("time", millis() / 1000);
   uniformsShader.setUniform("width", fbo.width);
   uniformsShader.setUniform("height", fbo.height);
+  uniformsShader.setUniform("rand", randonclrpos);
 
   // Draw a rect that covers the full FBO size
   push();

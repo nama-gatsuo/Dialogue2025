@@ -84,3 +84,16 @@ I also adjusted the achromatic transition states while the animation was at it �
 
 The downside is that the colors get more and more vibrant over time (saturation keeps increasing 📈📈📈 )
 I'll control the time between a specific range later and fine the colors a bit more
+
+## 2025.06.14 - [cyc]
+
+Just a quick note
+
+I've updated:
+1.Fixed the over saturation algorithm/overly rapid transitions 🔧
+2.Changed col0 & col1 to random r/g/b combinations so the colors are different every time. 
+Also simply displayed them below the canvas - if you see any color palette you like, feel free to record them... 🎨📝
+3.I like brrbrg/rrbrgb
+
+p.s.1 Do you think we should have another pre-meeting on Monday?
+p.s.2 Have a wonderful weekend with 🎉✨🐕!

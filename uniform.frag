@@ -8,11 +8,20 @@ uniform float time;
 uniform float width;
 uniform float height;
 uniform sampler2D colorTex;
+uniform int rand[6];
 
 // gaussian fun
 const float PI = 3.1415926535897932384626433832795;
 float gaussian(float x, float sigma) {
     return exp(-(x * x) / (2.0 * sigma * sigma));
+}
+
+
+// random color(combo1&combo2) every time
+float getclrpos(vec3 color, int idx) {
+    if (idx == 0) return color.r;
+    if (idx == 1) return color.g;
+    return color.b;
 }
 
 
@@ -22,7 +31,7 @@ float gaussian2D(vec2 pos, float sigma) {
     return exp(-(dist * dist) / (2.0 * sigma * sigma));
 }
 
-float psuedoRandom(vec2 pos) {
+float random(vec2 pos) {
     return fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
@@ -114,7 +123,7 @@ vec4 color_fun(in vec2 uv, float t){
     
     // deformation+loop
     for(int i = 1; i < 6; i++){ 
-        float noise = psuedoRandom(pos);
+        float noise = random(pos);
         
         // basic deformation
         pos.x += strength * sin(2.0*slowTime + float(i)*100.0 * pos.y * noise) + slowTime * 0.00001;
@@ -189,7 +198,7 @@ void main()
         float dist = distance(pos+ii, uv);
 
         // vec2 sampleOffset = mod(
-        //     vec2(psuedoRandom(ceil(uv*100.0)), psuedoRandom(ceil(uv*100.0))),
+        //     vec2(random(ceil(uv*100.0)), random(ceil(uv*100.0))),
         //     vec2(0.001 + smoothstep(0.2, 0.5, distance(uv, vec2(0.5))) * 0.05)
         // ); // random dithering
 
@@ -199,8 +208,8 @@ void main()
         );
         
         vec2 sampleOffset = vec2(
-            psuedoRandom(floor(uv * 100.0 + organicNoise)), 
-            psuedoRandom(floor(uv * 60.0 + organicNoise * 1.3))
+            random(floor(uv * 100.0 + organicNoise)), 
+            random(floor(uv * 60.0 + organicNoise * 1.3))
         ) * (0.001 + smoothstep(0.05, 0.6, distance(uv, vec2(0.5))) * 0.02);
         
         // sampleOffset.x += sin(uv.y * ii) * 0.1; // to distort whole image with wave
@@ -218,16 +227,23 @@ void main()
         vec3 modCol = sin(wr.rgb * PI * 20.0) * 0.5 + 0.5;
         wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
 
-        // vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, abs(sin(time * 0.2)), 1.0);
-        // vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0,abs(time)+sin(time * 0.1), 1.0);
-        // wr.rgb = mix(col0, col1, vec3(sin(time+atan(PI*0.005)), sin(time), sin(time+0.1)) * 0.3 + vec3(0.1));
-
+        vec3 combo1 = vec3(
+            getclrpos(wr.rgb, rand[0]),
+            getclrpos(wr.rgb, rand[1]),
+            getclrpos(wr.rgb, rand[2])
+        );
+        
+        vec3 combo2 = vec3(
+            getclrpos(wr.rgb, rand[3]),
+            getclrpos(wr.rgb, rand[4]),
+            getclrpos(wr.rgb, rand[5])
+        );
 
         float sat1 = 0.5 + abs(sin(time * 0.2)) * 1.1;
         float sat2 = 0.4 + abs(sin(time * 0.1)) * 2.2;
 
-        vec3 col0 = ContrastSaturationBrightness(wr.grb, 1.0, sat1, 1.0);
-        vec3 col1 = ContrastSaturationBrightness(wr.rbg, 1.0, sat2, 1.0);
+        vec3 col0 = ContrastSaturationBrightness(combo1, 1.0, sat1, 1.0);
+        vec3 col1 = ContrastSaturationBrightness(combo2, 1.0, sat2, 1.0);
         wr.rgb = mix(col0, col1, sin(time * 0.6) * 0.3 + 0.5);
 
         gl_FragColor = wr;

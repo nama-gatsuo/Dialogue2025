@@ -9,7 +9,14 @@
     <title>Dialogue2025</title>
   </head>
   <body>
+    <div id ="combo-display"></div>
   </body>
 
-
+  <script>
+    setInterval(() => {
+      if (typeof resultString !== 'undefined' && document.getElementById('combo-display')) {
+        document.getElementById('combo-display').textContent = resultString;
+      }
+    }, 100);
+    </script>
 </html>
