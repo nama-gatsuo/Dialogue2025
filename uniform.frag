@@ -1,5 +1,5 @@
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 // basic setting
@@ -26,6 +26,22 @@ float psuedoRandom(vec2 pos) {
     return fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
+// color correction function
+vec3 ContrastSaturationBrightness(vec3 color, float brt, float sat, float con) {
+    const float AvgLumR = 0.5;
+    const float AvgLumG = 0.5;
+    const float AvgLumB = 0.5;
+
+    const vec3 LumCoeff = vec3(0.2125, 0.7154, 0.0721);
+    
+    vec3 AvgLumin  = vec3(AvgLumR, AvgLumG, AvgLumB);
+    vec3 brtColor  = clamp(color,vec3(0),vec3(1)) * brt;
+    vec3 intensity = vec3(dot(brtColor, LumCoeff));
+    vec3 satColor  = mix(intensity, brtColor, sat);
+    vec3 conColor  = mix(AvgLumin, satColor, con);
+
+    return conColor;
+}
 
 // This function is just all about color :)
 vec4 color_fun(in vec2 uv, float t){
@@ -163,7 +179,7 @@ void main()
     // slow down the time
     float gaussTimeMain = time * 0.05; 
     
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 1; i++){
         float ii = float(i);
         float loopGauss = gaussian(sin(gaussTimeMain * 0.1 + ii * 0.1), 0.4);
        
@@ -181,7 +197,7 @@ void main()
         
         // final color
         // I usually mess with this function a lot to see what's the surprise...
-        float osc = sin(time * 0.02) * 0.5 + sin(0.006 * time + cos(time * 0.1) * PI) * 1.0;
+        float osc = sin(time * 0.02) * 0.5 + sin(0.006 * time + cos(time * 0.1) * PI) * 8.0;
         vec4 wr = color_fun(uv + sampleOffset, osc*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
 
         // wr = vec4(pow(wr.rgb, vec3(0.2)), 1.0); // make image super bright
@@ -191,6 +207,11 @@ void main()
         
         vec3 modCol = sin(wr.rgb * PI * 20.0) * 0.5 + 0.5;
         wr = vec4(mix(wr.rgb, modCol, 0.2), 1.0);
+
+        // added color warping
+        vec3 col0 = ContrastSaturationBrightness(wr.rgb, 1.0, sin(time * 0.5), 1.0);
+        vec3 col1 = ContrastSaturationBrightness(wr.gbr, 1.0, sin(time * 0.5), 1.0);
+        wr.rgb = mix(col0, col1, vec3(sin(time+PI), sin(time), sin(time+0.4)) * 0.5 + vec3(0.5));
 
         gl_FragColor = wr;
         

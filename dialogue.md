@@ -62,3 +62,11 @@ I think we can working on color adjustments next - all the colors 🌈 are curre
 Temporarily comment out the sampleOffset in main() - it was too intense, wanna creating more organic ripples now... 🌊
 
 Caustics reference: https://github.com/shanecelis/water-demo/blob/master/Shaders/Caustics.shader
+
+## 2025.06.13 - [ayumu]
+
+Gorgeous causitics! Organic fluiditiy, complexity
+I tried warping rgb to see another possibitlity of color pallettes.
+Now it changes color along time, but then it gots awkward black spots😂.
+Let me see if I can do anything...
+And really minor thing, I added a gray frame with CSS.
