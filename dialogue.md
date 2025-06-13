@@ -70,3 +70,17 @@ I tried warping rgb to see another possibitlity of color pallettes.
 Now it changes color along time, but then it gots awkward black spots😂.
 Let me see if I can do anything...
 And really minor thing, I added a gray frame with CSS.
+
+## 2025.06.13 - [cyc]
+
+I think I love the colors more and more
+The current light and dark areas have this dimensional quality, 
+and in some moments it's starting to look like oil painting! 🎨✨ (and we have a frame now 😂)
+I tweaked the sampleOffset at the edges a bit to add some variation to the edge mosaic effect 🔧
+
+And for color...
+I'm guessing the "black spots" you mentioned are those areas with extremely dark(black) colors?
+I also adjusted the achromatic transition states while the animation was at it 🌈
+
+The downside is that the colors get more and more vibrant over time (saturation keeps increasing 📈📈📈 )
+I'll control the time between a specific range later and fine the colors a bit more
