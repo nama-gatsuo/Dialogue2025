@@ -185,6 +185,12 @@ void main()
     vec2 pos = uv * vec2(width, height);
     vec2 center = vec2(width/2.0, height/2.0);
 
+    // reversing distance field
+    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
+    vec2 dir = normalize(uv - vec2(0.5, 0.5));
+    vec2 tuv = (dir * d) * 0.1 + vec2(0.5, 0.5);
+    uv = mix(uv, tuv, max(0.0, cos(time * 0.5)));
+
     // slow down the time
     float gaussTimeMain = time * 0.05; 
     
