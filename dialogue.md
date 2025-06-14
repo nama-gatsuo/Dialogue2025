@@ -99,3 +99,11 @@ p.s.1 Do you think we should have another pre-meeting on Monday?
 p.s.2 Have a wonderful weekend with 🎉✨🐕!
 
 ## 2025.06.14 - [ayumu]
+
+Color looks so nice! And generativce (variation) system!
+I'm always surprised how you introduced brand-new code.
+Today I just add another uv warp like tunnel. It uses distance-reversing from a center point. 
+I hope you also have a cozy weekend🕊️
+
+P.S. For me all good to just keep up this dialog based communication instead of the mtg.
+Because literally I am just only reacting on what I feel from the code status.
