@@ -107,3 +107,14 @@ I hope you also have a cozy weekend🕊️
 
 P.S. For me all good to just keep up this dialog based communication instead of the mtg.
 Because literally I am just only reacting on what I feel from the code status.
+
+## 2025.06.15 - [cyc]
+
+Your modifications remind me of lens code - maybe we could do some lens variations too! 🔍
+
+I hit a bit of a creative block today on what to do next, so I reverted the colors back to their initial state 
+Simple is beautiful - I think doing some subtraction with the code is good too 🎯
+I added random mixing coefficients for the existing two Gaussian points so each initial pattern looks more different every time ✨
+
+The dialog approach is totally fine! I think this kind of dialogue is really great...
+I have some exhibition setup ideas - we can look at them together on Wednesday 💭

@@ -4,6 +4,7 @@ let uniformsShader;
 let smallFBO, largeFBO;
 let aspectRatio;
 let randonclrpos = [];
+let randomGauss = [];
 
 function setup() {
   pixelDensity(1);
@@ -13,7 +14,12 @@ function setup() {
   for (let i = 0; i < 6; i++) {
     randonclrpos.push(Math.floor(Math.random() * 3));
   }
-  
+  // random combinedGauss
+  for (let i = 0; i < 3; i++) {
+    let sign = Math.random() > 0.5 ? 1 : -1;
+    let strength = 0.1 + Math.random() * 0.9;
+    randomGauss.push(sign * strength);
+  }
   resultString = randonclrpos.map(x => ['r','g','b'][x]).join('');
   console.log(randonclrpos);
 
@@ -65,6 +71,7 @@ function renderToFBO(fbo) {
   uniformsShader.setUniform("width", fbo.width);
   uniformsShader.setUniform("height", fbo.height);
   uniformsShader.setUniform("rand", randonclrpos);
+  uniformsShader.setUniform("gauss", randomGauss);
 
   // Draw a rect that covers the full FBO size
   push();
