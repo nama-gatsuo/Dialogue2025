@@ -53,7 +53,13 @@ vec3 ContrastSaturationBrightness(vec3 color, float brt, float sat, float con) {
     return conColor;
 }
 
-
+float vignette(vec2 uv) {
+    float s0 = smoothstep(0.04, 0.0, uv.x);
+    float s1 = smoothstep(0.04, 0.0, uv.y);
+    float s2 = smoothstep(0.98, 1.0, uv.x);
+    float s3 = smoothstep(0.98, 1.0, uv.y);
+    return mix(1.0, 0.7, max(max(s0, s1), max(s2, s3)));
+}
 
  float noise(vec2 pos) {
     return fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
@@ -228,12 +234,11 @@ void main()
     vec2 center = vec2(width/2.0, height/2.0);
     // reversing distance field
     
-   
-    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
-        
-        vec2 dir = normalize(uv - vec2(0.5, 0.5));
-        vec2 tuv = (dir * d) * 0.1 + vec2(0.5, 0.5);
-        uv = mix(uv, tuv, max(0.0, cos(time * 0.5)));
+    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.8), 0.5);
+    float shadow = mix(1.0, 0.85, smoothstep(0.1 * max(0.0, cos(time * 0.5)), 0.0, d));
+    vec2 dir = normalize(uv - vec2(0.5, 0.5));
+    vec2 tuv = (dir * d) * 0.1 + vec2(0.5, 0.5);
+    uv = mix(uv, tuv, max(0.0, cos(time * 0.5)));
 
     // slow down the time
     float gaussTimeMain = time * 0.05; 
@@ -291,7 +296,8 @@ void main()
         vec3 col0 = ContrastSaturationBrightness(combo1, 1.0, sat1, 1.0);
         vec3 col1 = ContrastSaturationBrightness(combo2, 1.0, sat2, 1.0);
         wr.rgb = mix(col0, col1, sin(time * 0.6) * 0.3 + 0.5);
-
+        wr.rgb *= vignette(vTexCoord);
+        wr.rgb *= shadow;
         gl_FragColor = wr;
         
     }

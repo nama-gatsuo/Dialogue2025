@@ -118,3 +118,10 @@ I added random mixing coefficients for the existing two Gaussian points so each 
 
 The dialog approach is totally fine! I think this kind of dialogue is really great...
 I have some exhibition setup ideas - we can look at them together on Wednesday 💭
+
+## 2025.06.16
+
+What a gorgeous look! Now the gradation is so smooth without any extream spots.
+And small grained disther makes it more authentic🎨
+This is already a piece of something to exhibit...
+Today I added a shadow effect to see 3 dimentional look like a real picture.
