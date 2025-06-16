@@ -233,15 +233,37 @@ void main()
     vec2 pos = uv * vec2(width, height);
     vec2 center = vec2(width/2.0, height/2.0);
     // reversing distance field
-    
-    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.8), 0.5);
-    float shadow = mix(1.0, 0.85, smoothstep(0.1 * max(0.0, cos(time * 0.5)), 0.0, d));
-    vec2 dir = normalize(uv - vec2(0.5, 0.5));
-    vec2 tuv = (dir * d) * 0.1 + vec2(0.5, 0.5);
-    uv = mix(uv, tuv, max(0.0, cos(time * 0.5)));
+    // timeControl enhance shadow & lens effect
+    float timeControl = smoothstep(0.0, 1.0, (sin(time * 0.2) + 1.0) * 0.5);
 
+    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.8), 0.5);
+    float shadow = mix(1.0, 0.85, smoothstep(0.1 * timeControl, 0.0, d));
+    float dir = distance(uv, vec2(0.5, 0.5));
+    
+    // only use it when timeControl > 0
+    if (timeControl > 0.0) {
+        for (int ring = 1; ring <= 6; ring++) {
+            float ringRadius = float(ring) * 0.12;
+            float ringWidth = 0.8;
+            
+            if (abs(dir - ringRadius) < ringWidth * 0.5) {
+                float localDist = abs(dir - ringRadius);
+                float lensPct = 1.0 - (localDist / (ringWidth * 0.5));
+                
+                float dStrength = d;
+                float lensEffect = sin(lensPct * 20.0 + dStrength * 20.0) * 0.06 
+                                  * timeControl
+                                  * (0.8 + 0.4 * cos(time * 0.01 + float(ring)));
+                
+                vec2 dir = normalize(uv - vec2(0.5, 0.5));
+                uv += dir * lensEffect;
+                
+                break;
+            }
+        }
+    }
     // slow down the time
-    float gaussTimeMain = time * 0.05; 
+    float gaussTimeMain = time * 0.02; 
     
     for (int i = 0; i < 1; i++){
         float ii = float(i);

@@ -125,3 +125,13 @@ What a gorgeous look! Now the gradation is so smooth without any extream spots.
 And small grained disther makes it more authentic🎨
 This is already a piece of something to exhibit...
 Today I added a shadow effect to see 3 dimentional look like a real picture.
+
+## 2025.06.16 - [cyc]
+
+I first fixed the coordinate system so the pattern looks more different now (not always starting from the left-top corner anymore)
+Then I added lens calculation on top of your distance function, 
+making it synchronize with your distance function to have lens-like variations
+I think the shadow effects you added work really well - they give this piece dimensionality from all angles...
+
+I'm so happy you said "This is already a piece of something to exhibit..."
+It also gets me excited thinking about how to present this kind of process 💭❔
