@@ -247,12 +247,14 @@ void main()
         float ii = float(i);
         float loopGauss = gaussian(sin(gaussTimeMain * 0.1 + ii * 0.1), 0.4);
         
-       
-        //pos.x += sin(pos.x*0.04 + ii*0.01) * 10.0 * gaussTimeMain * (0.2 + loopGauss * 0.8);
-        pos.y += cos(pos.y*40. + ii*10.) * 10.0 * gaussTimeMain * (0.2 + loopGauss * 0.8);
-
-        float dist = distance(pos+ii, uv);
-
+        // compute the deformed position first
+        vec2 modifiedPos = pos;
+        modifiedPos.y += cos(modifiedPos.y*40. + ii*10.) * 10.0 * gaussTimeMain * (0.2 + loopGauss * 0.8);
+        
+        //convert to uv coordinates
+        vec2 modifiedUV = modifiedPos / vec2(width, height);
+        float dist = distance(modifiedUV, vec2(0.5, 0.5)); // based on screen center
+        
         vec2 organicNoise = vec2(
             sin(uv.x * 20.0 + uv.y * 15.0 + time * 0.2) * 2.0,
             cos(uv.y * 18.0 + uv.x * 12.0 + time * 0.15) * 2.5
@@ -263,13 +265,13 @@ void main()
             random(floor(uv * 60.0 + organicNoise * 1.3))
         ) * (0.001 + smoothstep(0.05, 0.6, distance(uv, vec2(0.5))) * 0.02);
         
-        // sampleOffset.x += sin(uv.y * ii) * 0.1; // to distort whole image with wave
         
         // final color
         // I usually mess with this function a lot to see what's the surprise...
         float osc = sin(time * 0.02) * 0.5 + sin(0.006 * time + cos(time * 0.1) * PI) * 8.0;
 
-        vec4 wr = color_fun(uv + sampleOffset, osc*sin(uv.y)/uv.y+abs(pow(dist*0.2,0.45)));
+        // use a unified distance calculation method
+        vec4 wr = color_fun(uv + sampleOffset, osc + abs(pow(dist*2.0, 0.45)));
 
         vec3 bright = pow(wr.rgb, vec3(0.7, 0.3, 0.4));
         vec3 original = wr.rgb;
