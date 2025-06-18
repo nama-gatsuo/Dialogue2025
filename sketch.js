@@ -5,6 +5,7 @@ let smallFBO, largeFBO;
 let aspectRatio;
 let randonclrpos = [];
 let randomGauss = [];
+let lensType;
 
 function setup() {
   pixelDensity(1);
@@ -45,6 +46,8 @@ function setup() {
   });
 
   noStroke();
+
+  lensType = Math.floor(random(0, 3));
 }
 
 function draw() {
@@ -72,7 +75,8 @@ function renderToFBO(fbo) {
   uniformsShader.setUniform("height", fbo.height);
   uniformsShader.setUniform("rand", randonclrpos);
   uniformsShader.setUniform("gauss", randomGauss);
-
+  uniformsShader.setUniform("lensType", lensType);
+  
   // Draw a rect that covers the full FBO size
   push();
   noStroke();

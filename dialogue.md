@@ -119,7 +119,7 @@ I added random mixing coefficients for the existing two Gaussian points so each 
 The dialog approach is totally fine! I think this kind of dialogue is really great...
 I have some exhibition setup ideas - we can look at them together on Wednesday 💭
 
-## 2025.06.16
+## 2025.06.16 - [aym]
 
 What a gorgeous look! Now the gradation is so smooth without any extream spots.
 And small grained disther makes it more authentic🎨
@@ -135,3 +135,10 @@ I think the shadow effects you added work really well - they give this piece dim
 
 I'm so happy you said "This is already a piece of something to exhibit..."
 It also gets me excited thinking about how to present this kind of process 💭❔
+
+## 2025.06.18 - [aym]
+
+Thanks for organizing as always📐
+I was absent yesterday sorry!
+Today I added 3 variations of warping.
+Let's discuss later about insatallation plan and wrap-up current status today on the weekly mtg!

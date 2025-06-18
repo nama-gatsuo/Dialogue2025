@@ -10,6 +10,7 @@ uniform float height;
 uniform sampler2D colorTex;
 uniform int rand[6];
 uniform float gauss[3];
+uniform int lensType;
 
 // gaussian fun
 const float PI = 3.1415926535897932384626433832795;
@@ -236,7 +237,15 @@ void main()
     // timeControl enhance shadow & lens effect
     float timeControl = smoothstep(0.0, 1.0, (sin(time * 0.2) + 1.0) * 0.5);
 
-    float d = mod(1.0 / pow(distance(uv, vec2(0.5, 0.5)), 0.8), 0.5);
+    float d = 0.0;
+    if (lensType == 0) {
+        d = mod(1.0/ pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
+    } else if (lensType == 1) {
+        d = mod(uv.x - uv.y, 0.25);
+    } else {
+        d = min(mod(uv.x, 0.2), mod(uv.y, 0.2));
+    }
+
     float shadow = mix(1.0, 0.85, smoothstep(0.1 * timeControl, 0.0, d));
     float dir = distance(uv, vec2(0.5, 0.5));
     
