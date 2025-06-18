@@ -142,3 +142,13 @@ Thanks for organizing as always📐
 I was absent yesterday sorry!
 Today I added 3 variations of warping.
 Let's discuss later about insatallation plan and wrap-up current status today on the weekly mtg!
+
+## 2025.06.19 - [cyc]
+
+No worries, I overslept and miss one day too! I think we're pretty flexible!
+Today I added lens calculation for other 2 variations!
+When I woke up, I found out the last thing I Googled was "What to do if I'm always sleepy" 😂😂 
+Yesterday's meeting felt so real - Excited and like it was actually happening
+Let's keep having fun and get this thing done!🙌
+
+P.S. Silver Trail's new 3D view mode is so cool! Definitely love it!

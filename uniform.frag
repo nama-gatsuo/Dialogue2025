@@ -239,18 +239,19 @@ void main()
 
     float d = 0.0;
     if (lensType == 0) {
-        d = mod(1.0/ pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
+     d = mod(1.0/ pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
     } else if (lensType == 1) {
-        d = mod(uv.x - uv.y, 0.25);
+    d = mod(uv.x - uv.y, 0.25);
     } else {
         d = min(mod(uv.x, 0.2), mod(uv.y, 0.2));
     }
 
+    // d = mod(1.0/ pow(distance(uv, vec2(0.5, 0.5)), 0.5), 0.5);
     float shadow = mix(1.0, 0.85, smoothstep(0.1 * timeControl, 0.0, d));
     float dir = distance(uv, vec2(0.5, 0.5));
     
     // only use it when timeControl > 0
-    if (timeControl > 0.0) {
+    if (timeControl > 0.0 && lensType == 0) {
         for (int ring = 1; ring <= 6; ring++) {
             float ringRadius = float(ring) * 0.12;
             float ringWidth = 0.8;
@@ -260,7 +261,7 @@ void main()
                 float lensPct = 1.0 - (localDist / (ringWidth * 0.5));
                 
                 float dStrength = d;
-                float lensEffect = sin(lensPct * 20.0 + dStrength * 20.0) * 0.06 
+                float lensEffect = sin(lensPct * 20.0 + dStrength * 30.0* sin(time*0.2)) * 0.06 
                                   * timeControl
                                   * (0.8 + 0.4 * cos(time * 0.01 + float(ring)));
                 
@@ -271,6 +272,59 @@ void main()
             }
         }
     }
+
+    if (timeControl > 0.0 && lensType == 1) {
+        float diagonal = uv.x - uv.y;
+        for (int line = -9; line <= 3; line++) {
+            float linePos = float(line) * 0.15;
+            float lineDistance = abs(diagonal - linePos);
+            float lineWidth = 0.08;
+            
+            if (lineDistance < lineWidth * 0.5) {
+                float localDist = lineDistance;
+                float lensPct = 1.0 - (localDist / (lineWidth * 0.5));
+                
+                vec2 diagonalDir = normalize(vec2(1.0, -1.0));
+                //float lensEffect = sin(lensPct * 5.0 + d * 1.0*sin(time)) * 0.04
+                float lensEffect = sin(lensPct * 5.0 + 5.*d*sin(time*0.5)) * 0.04 
+                                  * timeControl
+                                  * (0.9 + 0.3 * cos(time * 0.02 + float(line)));
+                
+                uv += diagonalDir * lensEffect;
+                break;
+            }
+        }
+    }
+
+    if (timeControl > 0.0 && lensType == 2) {
+            vec2 gridSize = vec2(0.2);
+            vec2 gridID = floor(uv / gridSize);
+            vec2 gridLocal = fract(uv / gridSize);
+            
+            vec2 cellCenter = vec2(0.5);
+            vec2 distFromCenter = abs(gridLocal - cellCenter); 
+            
+            float squareRadius = 0.5; //radius
+            float squareDist = max(distFromCenter.x, distFromCenter.y);  // dist
+            
+            if (squareDist < squareRadius) {
+
+                float lensPct = 1.0 - (squareDist / squareRadius);
+                
+                float lensEffect = sin(lensPct * 5.0* sin(time*0.2))
+                                  * timeControl
+                                  * (0.95 + 0.25 * cos(time * 0.015 + gridID.x + gridID.y));
+                
+                // float lensEffect = sin(lensPct * 8.0 * sin(time*0.2)) * 0.015
+                //   * timeControl
+                //   * (0.3 + 0.1 * cos(time * 0.015 + gridID.x + gridID.y));
+
+                vec2 cellDir = normalize(gridLocal - cellCenter);
+                uv += cellDir * lensEffect * gridSize;
+            }
+
+    }
+    
     // slow down the time
     float gaussTimeMain = time * 0.02; 
     
