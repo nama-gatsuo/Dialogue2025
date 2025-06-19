@@ -152,3 +152,10 @@ Yesterday's meeting felt so real - Excited and like it was actually happening
 Let's keep having fun and get this thing done!🙌
 
 P.S. Silver Trail's new 3D view mode is so cool! Definitely love it!
+
+## 2025.06.19-2 - [cyc]
+
+I added two random center points to the color formula today, hoping to get more variety in the color palette
+Also slow the ripple timing a bit to make the overall ripples look slightly calmer
+Sometimes the canvas looks like a landscape painting - It's really nice!
+

@@ -9,7 +9,7 @@ uniform float width;
 uniform float height;
 uniform sampler2D colorTex;
 uniform int rand[6];
-uniform float gauss[3];
+uniform float gauss[5];
 uniform int lensType;
 
 // gaussian fun
@@ -199,19 +199,26 @@ vec4 color_fun(in vec2 uv, float t){
     // gaussian center point
     vec2 center1 = vec2(sin(t * 0.1) * 0.5, cos(t * 0.15) * 0.5);
     vec2 center2 = vec2(cos(t * 0.08) * 0.3, sin(t * 0.12) * 0.3);
+    vec2 center3 = vec2(sin(t * 0.13) * 0.4, cos(t * 0.09) * 0.6);
+    vec2 center4 = vec2(cos(t * 0.11) * 0.7, sin(t * 0.14) * 0.2);
+    vec2 center5 = vec2(sin(t * 0.07) * 0.6, cos(t * 0.16) * 0.4);
     
     // center-dist
     float gauss1 = gaussian2D(pos - center1, 0.4);
     float gauss2 = gaussian2D(pos - center2, 0.6);
+    float gauss3 = gaussian2D(pos - center3, 0.3);
+    float gauss4 = gaussian2D(pos - center4, 0.8);
+    float gauss5 = gaussian2D(pos - center5, 0.5);
     
-    // random param from js 
-    float combinedGauss = gauss1 * gauss[0] + gauss2 * gauss[1] + gauss[2];
+    float combinedGauss = gauss1 * gauss[0] + gauss2 * gauss[1] + gauss[2];  // 原有
+    float secondaryGauss = gauss3 * gauss[3]*0.6+ gauss4 * gauss[4]*0.6; 
+    float bonusInfluence = gauss5 * gauss[2];
     
-    // slow down the time
-    float slowTime = t * 0.2 * (1.0 + combinedGauss * 0.5);
+    float totalGaussInfluence = combinedGauss + secondaryGauss * 0.6 + bonusInfluence * 0.4;
+    
+    float slowTime = t * 0.1 * (1.0 + totalGaussInfluence * 0.5);
     
     for(int i = 1; i < 6; i++){ 
-        //noise fun
         float noise = fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
         
         pos.x += strength * sin(2.0*slowTime+float(i)*100.0 * pos.y*noise) + slowTime * 0.00001;
@@ -219,7 +226,7 @@ vec4 color_fun(in vec2 uv, float t){
         
         float chaos_x = sin(pos.y*6.0 + slowTime*1.1) * cos(pos.x*3.0 + slowTime*1.7);
         float chaos_y = cos(pos.x*1.0 + slowTime*10.) * sin(pos.y*1.3 + slowTime*0.3);
-        pos += vec2(chaos_x, chaos_y) * 0.55 * combinedGauss;
+        pos += vec2(chaos_x, chaos_y) * 0.55 * totalGaussInfluence;  // 使用 totalGaussInfluence
     }
     
     col += 0.5 + 0.5*sin(slowTime+pos.xyx+pos.yyy+pos.xxx+vec3(0.675,0.239,2.000));
@@ -227,6 +234,7 @@ vec4 color_fun(in vec2 uv, float t){
     return vec4(col,1.0);
 }
 
+        // pos.y += abs(sin(float(i)*1.)) *vignette(uv);
 void main()
 {
     //shader position

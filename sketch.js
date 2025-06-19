@@ -16,7 +16,7 @@ function setup() {
     randonclrpos.push(Math.floor(Math.random() * 3));
   }
   // random combinedGauss
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     let sign = Math.random() > 0.5 ? 1 : -1;
     let strength = 0.1 + Math.random() * 0.9;
     randomGauss.push(sign * strength);
