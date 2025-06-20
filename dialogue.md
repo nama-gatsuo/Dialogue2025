@@ -168,3 +168,15 @@ Now I overcome with dirty solution... I hope it doesn't mess up bad😂
 Just I wanted lens to have actual thickness, and have shaddow on it.
 
 
+## 2025.06.20 - [cyc]
+I messed sampleOffset today and the circles one works the best!
+The square-divided one have a bit of an oil painting effect, and the diagonal lines effect...I don't like it 😂
+
+About Silver Trail (which is totally fine, don't worry 😂)
+- our original system rules seemed to require going through the center point of the canvas,
+but I'm worried this might make the patterns too uniform
+Maybe we should simply use the 'merge to one point' concept instead? 🤔
+Also, what are your thoughts on the color palette? 
+I feel like your style is cool/black&white, mine is rainbow colors (oh no!)
+
+

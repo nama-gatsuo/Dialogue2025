@@ -375,12 +375,18 @@ void main()
             sin(uv.x * 20.0 + uv.y * 15.0 + time * 0.2) * 2.0,
             cos(uv.y * 18.0 + uv.x * 12.0 + time * 0.15) * 2.5
         );
+
+        vec2 wavePattern = vec2(
+        sin(uv.x * 15.0 + time * 0.5) * 3.0,
+        cos(uv.y * 12.0 + time * 0.3) * 4.0
+        );
         
+        float angle = atan(uv.y - 0.5, uv.x - 0.5);
+        vec2 polarOffset = vec2(angle * 25.0, dist * 25.0);
         vec2 sampleOffset = vec2(
-            random(floor(uv * 100.0 + organicNoise)), 
-            random(floor(uv * 60.0 + organicNoise * 1.3))
-        ) * (0.001 + smoothstep(0.05, 0.6, distance(uv, vec2(0.5))) * 0.02);
-        
+            random(floor(-polarOffset.xy + time * 0.2)), 
+            random(floor(polarOffset.yx - time * 1.0))
+        ) * (0.3+ dist * 0.1);
         
         // final color
         // I usually mess with this function a lot to see what's the surprise...
