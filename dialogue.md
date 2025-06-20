@@ -159,3 +159,5 @@ I added two random center points to the color formula today, hoping to get more 
 Also slow the ripple timing a bit to make the overall ripples look slightly calmer
 Sometimes the canvas looks like a landscape painting - It's really nice!
 
+## 2025.06.20 - [aym]
+Interesting!

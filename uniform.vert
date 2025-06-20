@@ -1,9 +1,10 @@
+#version 300 es
 // our vertex data
-attribute vec3 aPosition;
-attribute vec2 aTexCoord;
+in vec3 aPosition;
+in vec2 aTexCoord;
 
 // lets get texcoords just for fun! 
-varying vec2 vTexCoord;
+out vec2 vTexCoord;
 
 void main() {
   // copy the texcoords
