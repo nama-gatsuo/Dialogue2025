@@ -160,4 +160,11 @@ Also slow the ripple timing a bit to make the overall ripples look slightly calm
 Sometimes the canvas looks like a landscape painting - It's really nice!
 
 ## 2025.06.20 - [aym]
-Interesting!
+Interesting! I was surprised you put actual lens distortion effect on my kinda wired idea🙏
+And your story is so hilarious. If I feel even the slightest bit sleepy, I go to bed.
+
+From yesterday, I was pretty struggling to use derivertive functions (dfdx and dfdy) in p5js.
+Now I overcome with dirty solution... I hope it doesn't mess up bad😂
+Just I wanted lens to have actual thickness, and have shaddow on it.
+
+
