@@ -47,7 +47,7 @@ function setup() {
 
   noStroke();
 
-  lensType = Math.floor(random(0, 3));
+  lensType = Math.floor(random(0, 4));
 }
 
 function draw() {

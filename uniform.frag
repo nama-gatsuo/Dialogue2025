@@ -64,8 +64,20 @@ float vignette(vec2 uv) {
     return mix(1.0, 0.7, max(max(s0, s1), max(s2, s3)));
 }
 
- float noise(vec2 pos) {
+float noise(vec2 pos) {
     return fract(sin(dot(pos, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+// excerpted from https://iquilezles.org/articles/distfunctions2d/
+float sdCircleWave(vec2 p, float tb, float ra) {
+    tb = 3.1415927*5.0/6.0*max(tb,0.0001);
+    vec2 co = ra*vec2(sin(tb),cos(tb));
+    p.x = abs(mod(p.x,co.x*4.0)-co.x*2.0);
+    vec2  p1 = p;
+    vec2  p2 = vec2(abs(p.x-2.0*co.x),-p.y+2.0*co.y);
+    float d1 = ((co.y*p1.x>co.x*p1.y) ? length(p1-co) : abs(length(p1)-ra));
+    float d2 = ((co.y*p2.x>co.x*p2.y) ? length(p2-co) : abs(length(p2)-ra));
+    return min(d1, d2); 
 }
 
 // vec4 color_fun(in vec2 uv, float t){
@@ -270,10 +282,14 @@ void main()
     } else if (lensType == 1) {
         d = mod(uv.x - uv.y, 0.25);
         h = pow(sin(d * PI * 4.0), 0.5);
-    } else {
+    } else if (lensType == 2) {
         vec2 distFromCenter = abs(mod(uv, 0.2) * 5.0 - vec2(0.5)); 
         d = max(distFromCenter.x, distFromCenter.y);
         h = sin(d * PI * 1.0);
+    } else {
+        d = sdCircleWave(uv, 0.2, 0.5);
+        //d = mod(, 0.2);
+        h = sin(d * PI * 5.0);
     }
 
     // see as a heightmap, apply phongshading

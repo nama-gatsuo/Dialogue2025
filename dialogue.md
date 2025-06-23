@@ -179,4 +179,13 @@ Maybe we should simply use the 'merge to one point' concept instead? 🤔
 Also, what are your thoughts on the color palette? 
 I feel like your style is cool/black&white, mine is rainbow colors (oh no!)
 
+## 2025.06.23 - [ayumu]
 
+Sorry to be late, 
+Right, center point one seems going to be dull in composition-wise.
+Should we have quick chat?
+In stead of haveing one single center point, how about giveing one or more random points to be shared. Let's say "we share random intersection point(s)".
+And color pallette(s), they also could be shared.
+In color theme I can be flexible/correspond to yours.
+I tend to go black background + high contrast (with additive blend...), but it's not required.
+Somehow I remember I tried silver-ness in that way🐩
