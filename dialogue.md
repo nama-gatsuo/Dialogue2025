@@ -189,3 +189,14 @@ And color pallette(s), they also could be shared.
 In color theme I can be flexible/correspond to yours.
 I tend to go black background + high contrast (with additive blend...), but it's not required.
 Somehow I remember I tried silver-ness in that way🐩
+
+
+## 2025.06.24 - [cyc]
+
+Sorry to be late 2! 
+I've been rushing to test Silver Trail lately, so I'm a bit behind on Dialog 2025
+I think I'll finish the new point system we can share together tmr, and let's see what Silver Trail looks like after that!
+I tweaked the caustic and offset a bit and reapplied them, found that too much screen division can sometimes be overwhelming to eyes 👀
+I feel like we're getting close! 
+
+p.s. Even though the process can be tiring sometimes, you always show me new possibilities, especially how to combine and balance 2d&3d feelings of canvas - I'm having so much fun😊!
