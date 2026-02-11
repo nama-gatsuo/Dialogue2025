@@ -22,6 +22,10 @@ let recordFrameIndex = 0;
 let recordFps = 30;
 let recordEvery = 1;
 let recordEndFrame = 300; // stop after this many exported frames
+let zip = null;
+let zipChunkSize = 100;
+let zipChunkIndex = 0;
+let zipFrameCount = 0;
 
 function preload() {
   uniformsShader = loadShader("uniform.vert", "uniform.frag");
@@ -76,8 +80,12 @@ function draw() {
   if (isRecording && frameCount % recordEvery === 0) {
     exportFrame(time);
     recordFrameIndex += 1;
+    if (zipFrameCount >= zipChunkSize) {
+      rotateZip();
+    }
     if (recordFrameIndex >= recordEndFrame) {
       isRecording = false;
+      finalizeZipIfNeeded();
     }
   }
 
@@ -168,8 +176,15 @@ function exportFrame(time) {
   fbo.end();
 
   let img = fbo.get();
-  let filename = `frame_${String(recordFrameIndex).padStart(5, "0")}`;
-  img.save(filename, "png");
+  let filename = `frame_${String(recordFrameIndex).padStart(5, "0")}.png`;
+  if (zip) {
+    let dataUrl = img.canvas.toDataURL("image/png");
+    let base64 = dataUrl.split(",")[1];
+    zip.file(filename, base64, { base64: true });
+    zipFrameCount += 1;
+  } else {
+    img.save(filename.replace(".png", ""), "png");
+  }
 }
 
 
@@ -186,8 +201,61 @@ function keyPressed() {
     isRecording = !isRecording;
     if (isRecording) {
       recordFrameIndex = 0;
+      zipChunkIndex = 0;
+      startZip();
+    } else {
+      finalizeZipIfNeeded();
     }
   }
+}
+
+function startZip() {
+  if (typeof JSZip === "undefined") {
+    console.warn("JSZip is not loaded.");
+    zip = null;
+    return;
+  }
+  zip = new JSZip();
+  zipFrameCount = 0;
+}
+
+async function finalizeZip(zipToSave, index) {
+  try {
+    let blob = await zipToSave.generateAsync({ type: "blob" });
+    let name = `frames_${String(index).padStart(3, "0")}.zip`;
+    triggerDownload(blob, name);
+  } catch (e) {
+    console.error("ZIP generation failed:", e);
+  }
+}
+
+function rotateZip() {
+  if (!zip) return;
+  let zipToSave = zip;
+  let index = zipChunkIndex;
+  zipChunkIndex += 1;
+  startZip();
+  finalizeZip(zipToSave, index);
+}
+
+function finalizeZipIfNeeded() {
+  if (!zip || zipFrameCount === 0) return;
+  let zipToSave = zip;
+  let index = zipChunkIndex;
+  zip = null;
+  zipFrameCount = 0;
+  finalizeZip(zipToSave, index);
+}
+
+function triggerDownload(blob, filename) {
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 // monitor fps
