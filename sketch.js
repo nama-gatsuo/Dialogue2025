@@ -21,11 +21,12 @@ let isRecording = false;
 let recordFrameIndex = 0;
 let recordFps = 30;
 let recordEvery = 1;
-let recordEndFrame = 300; // stop after this many exported frames
+let recordEndFrame = recordFps * 30; // stop after this many exported frames
 let zip = null;
 let zipChunkSize = 100;
 let zipChunkIndex = 0;
 let zipFrameCount = 0;
+let exportQueue = Promise.resolve();
 
 function preload() {
   uniformsShader = loadShader("uniform.vert", "uniform.frag");
@@ -78,15 +79,12 @@ function draw() {
   image(smallFBO, 0, 0, width, height);
 
   if (isRecording && frameCount % recordEvery === 0) {
-    exportFrame(time);
+    const frameIndex = recordFrameIndex;
+    const frameTime = frameIndex / recordFps;
     recordFrameIndex += 1;
-    if (zipFrameCount >= zipChunkSize) {
-      rotateZip();
-    }
-    if (recordFrameIndex >= recordEndFrame) {
-      isRecording = false;
-      finalizeZipIfNeeded();
-    }
+    const isLast = recordFrameIndex >= recordEndFrame;
+    if (isLast) isRecording = false;
+    queueExport(frameTime, frameIndex, isLast);
   }
 
   // if (frameCount > 10000) {
@@ -104,7 +102,7 @@ function renderToFBO(fbo, time) {
   shader(uniformsShader);
 
   // Send uniforms to shader
-  uniformsShader.setUniform("time", time);
+  uniformsShader.setUniform("time", time * 2.0);
   uniformsShader.setUniform("width", fbo.width);
   uniformsShader.setUniform("height", fbo.height);
   uniformsShader.setUniform("rand", randonclrpos);
@@ -155,7 +153,7 @@ function ensureExportFBO() {
   return exportFBO;
 }
 
-function exportFrame(time) {
+async function exportFrame(time, frameIndex) {
   let fbo = ensureExportFBO();
   if (!fbo) return;
 
@@ -176,11 +174,12 @@ function exportFrame(time) {
   fbo.end();
 
   let img = fbo.get();
-  let filename = `frame_${String(recordFrameIndex).padStart(5, "0")}.png`;
+  let filename = `frame_${String(frameIndex).padStart(5, "0")}.png`;
   if (zip) {
-    let dataUrl = img.canvas.toDataURL("image/png");
-    let base64 = dataUrl.split(",")[1];
-    zip.file(filename, base64, { base64: true });
+    let blob = await new Promise((resolve) => img.canvas.toBlob(resolve, "image/png"));
+    if (!blob) return;
+    let arrayBuffer = await blob.arrayBuffer();
+    zip.file(filename, arrayBuffer);
     zipFrameCount += 1;
   } else {
     img.save(filename.replace(".png", ""), "png");
@@ -204,7 +203,7 @@ function keyPressed() {
       zipChunkIndex = 0;
       startZip();
     } else {
-      finalizeZipIfNeeded();
+      exportQueue = exportQueue.then(() => finalizeZipIfNeeded());
     }
   }
 }
@@ -221,7 +220,11 @@ function startZip() {
 
 async function finalizeZip(zipToSave, index) {
   try {
-    let blob = await zipToSave.generateAsync({ type: "blob" });
+    let blob = await zipToSave.generateAsync({
+      type: "blob",
+      streamFiles: true,
+      compression: "STORE",
+    });
     let name = `frames_${String(index).padStart(3, "0")}.zip`;
     triggerDownload(blob, name);
   } catch (e) {
@@ -229,22 +232,34 @@ async function finalizeZip(zipToSave, index) {
   }
 }
 
-function rotateZip() {
+async function rotateZip() {
   if (!zip) return;
   let zipToSave = zip;
   let index = zipChunkIndex;
   zipChunkIndex += 1;
   startZip();
-  finalizeZip(zipToSave, index);
+  await finalizeZip(zipToSave, index);
 }
 
-function finalizeZipIfNeeded() {
+async function finalizeZipIfNeeded() {
   if (!zip || zipFrameCount === 0) return;
   let zipToSave = zip;
   let index = zipChunkIndex;
   zip = null;
   zipFrameCount = 0;
-  finalizeZip(zipToSave, index);
+  await finalizeZip(zipToSave, index);
+}
+
+function queueExport(time, frameIndex, isLast) {
+  exportQueue = exportQueue.then(async () => {
+    await exportFrame(time, frameIndex);
+    if (zipFrameCount >= zipChunkSize) {
+      await rotateZip();
+    }
+    if (isLast) {
+      await finalizeZipIfNeeded();
+    }
+  }).catch((e) => console.error("Export queue error:", e));
 }
 
 function triggerDownload(blob, filename) {
