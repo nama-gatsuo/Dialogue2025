@@ -10,8 +10,8 @@ let canvas;
 
 // render / display settings
 // fixed render resolution (display will be half size)
-let renderWidth = 1080 * 2;
-let renderHeight = 1920 * 2;
+let renderWidth = 960 * 2;
+let renderHeight = 960 * 2;
 let displayScaleFromRender = 0.5;
 let exportScale = 1; // additional scale for export
 
@@ -22,8 +22,9 @@ let recordFrameIndex = 0;
 let recordFps = 30;
 let recordEvery = 1;
 let recordEndFrame = recordFps * 30; // stop after this many exported frames
+let recordTimeOffset = 1000; // seconds offset for recording time
 let zip = null;
-let zipChunkSize = 100;
+let zipChunkSize = 300;
 let zipChunkIndex = 0;
 let zipFrameCount = 0;
 let exportQueue = Promise.resolve();
@@ -39,6 +40,7 @@ function setup() {
   for (let i = 0; i < 6; i++) {
     randonclrpos.push(Math.floor(Math.random() * 3));
   }
+  randonclrpos = [0,2,1,0,1,1];
   // random combinedGauss
   for (let i = 0; i < 5; i++) {
     let sign = Math.random() > 0.5 ? 1 : -1;
@@ -70,7 +72,9 @@ function setup() {
 
 function draw() {
 
-  const time = isRecording ? (recordFrameIndex / recordFps) : (millis() / 1000);
+  const time = isRecording
+    ? (recordFrameIndex / recordFps) + recordTimeOffset
+    : (millis() / 1000);
   renderToFBO(smallFBO, time);
 
   background(0);
@@ -80,7 +84,7 @@ function draw() {
 
   if (isRecording && frameCount % recordEvery === 0) {
     const frameIndex = recordFrameIndex;
-    const frameTime = frameIndex / recordFps;
+    const frameTime = (frameIndex / recordFps) + recordTimeOffset;
     recordFrameIndex += 1;
     const isLast = recordFrameIndex >= recordEndFrame;
     if (isLast) isRecording = false;
